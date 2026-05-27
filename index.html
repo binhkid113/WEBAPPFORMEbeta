@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Otoku Circle - User UI Prototype</title>
+    <link rel="preconnect" href="https://images.unsplash.com" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-layout">
+      <aside class="context-panel" aria-label="Project context">
+        <div class="brand-lockup">
+          <div class="brand-mark">O</div>
+          <div>
+            <p class="eyebrow">Community deals</p>
+            <h1>Otoku Circle</h1>
+          </div>
+        </div>
+        <p class="context-copy">
+          A small English forum for foreigners in Japan to share supermarket discounts,
+          useful product notes, and real shopping tips without needing to read every kanji sign.
+        </p>
+        <div class="mini-stat-grid">
+          <div>
+            <strong>28</strong>
+            <span>Deals today</span>
+          </div>
+          <div>
+            <strong>4</strong>
+            <span>Languages</span>
+          </div>
+          <div>
+            <strong>3 km</strong>
+            <span>Nearby range</span>
+          </div>
+        </div>
+        <div class="design-note">
+          <span data-lucide="sparkles"></span>
+          <p>Fresh deal tips from people who shop nearby and understand the same daily problems.</p>
+        </div>
+      </aside>
+
+      <main class="phone-shell" aria-label="Otoku Circle web app">
+        <header class="app-header">
+          <button class="icon-button" type="button" data-action="open-profile" aria-label="Open profile">
+            <span class="avatar small">M</span>
+          </button>
+          <div class="header-title">
+            <span>Otoku Circle</span>
+            <small>English deals near you</small>
+          </div>
+          <div class="header-actions">
+            <button class="icon-button" type="button" data-action="toggle-theme" aria-label="Toggle theme">
+              <span data-lucide="sun-moon"></span>
+            </button>
+            <button class="icon-button notification-dot" type="button" data-screen="notifications" aria-label="Open notifications">
+              <span data-lucide="bell"></span>
+            </button>
+          </div>
+        </header>
+
+        <section id="screen-root" class="screen-root" aria-live="polite"></section>
+
+        <nav class="bottom-nav" aria-label="Main navigation">
+          <button class="nav-item active" type="button" data-screen="home">
+            <span data-lucide="home"></span>
+            <span>Home</span>
+          </button>
+          <button class="nav-item" type="button" data-screen="search">
+            <span data-lucide="search"></span>
+            <span>Search</span>
+          </button>
+          <button class="nav-item create-nav" type="button" data-screen="create">
+            <span data-lucide="plus"></span>
+            <span>Post</span>
+          </button>
+          <button class="nav-item" type="button" data-screen="nearby">
+            <span data-lucide="map-pin"></span>
+            <span>Nearby</span>
+          </button>
+          <button class="nav-item" type="button" data-screen="profile">
+            <span data-lucide="user"></span>
+            <span>Me</span>
+          </button>
+        </nav>
+      </main>
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
