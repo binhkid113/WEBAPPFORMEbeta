@@ -148,6 +148,25 @@ function load_comments_for_post(int $postId): array
     }
 }
 
+function filter_mock_posts(array $posts, string $query): array
+{
+    if ($query === "") {
+        return $posts;
+    }
+
+    $q = strtolower($query);
+
+    return array_values(array_filter($posts, function ($post) use ($q) {
+        $haystack = strtolower(
+            $post["title"] . " " .
+            $post["description"] . " " .
+            $post["store"] . " " .
+            implode(" ", $post["tags"] ?? [])
+        );
+        return str_contains($haystack, $q);
+    }));
+}
+
 function time_ago(string $datetime): string
 {
     $now = time();
