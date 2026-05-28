@@ -48,6 +48,18 @@ require_once __DIR__ . "/includes/header.php";
     <a class="status-pill" href="create_store.php"><span data-lucide="plus"></span> Add place</a>
   </div>
 
+  <div class="nearby-range-bar">
+    <span data-lucide="radar" class="nearby-range-icon"></span>
+    <label for="nearby_range">Range</label>
+    <select id="nearby_range" class="nearby-range-select">
+      <option value="1">1 km</option>
+      <option value="2">2 km</option>
+      <option value="3" selected>3 km</option>
+      <option value="5">5 km</option>
+      <option value="10">10 km</option>
+    </select>
+  </div>
+
   <section class="map-panel">
     <div class="map-canvas">
       <div class="map-route"></div>
