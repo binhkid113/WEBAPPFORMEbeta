@@ -18,6 +18,10 @@ $values = [
 ];
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    if (!verify_csrf()) {
+        $errors[] = "Invalid form submission. Please try again.";
+    }
+
     foreach ($values as $key => $default) {
         $values[$key] = trim($_POST[$key] ?? $default);
     }
@@ -92,6 +96,7 @@ require_once __DIR__ . "/includes/header.php";
   <?php endif; ?>
 
   <form class="form-panel" action="create_store.php" method="post">
+    <?= csrf_field() ?>
     <div class="field">
       <label for="store-name">Place name</label>
       <input id="store-name" name="store_name" type="text" value="<?= e($values["store_name"]) ?>" placeholder="Example: AEON Takamatsu" />

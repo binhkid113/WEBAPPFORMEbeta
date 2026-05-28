@@ -14,6 +14,10 @@ $allPosts = $dbPosts ?: $posts;
 $post = find_post_by_id($allPosts, $postId);
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment_body"])) {
+    if (!verify_csrf()) {
+        $commentErrors[] = "Invalid form submission. Please try again.";
+    }
+
     $commentBody = trim($_POST["comment_body"] ?? "");
 
     if (!$currentUser) {
@@ -113,6 +117,7 @@ require_once __DIR__ . "/includes/header.php";
 
     <?php if ($currentUser) : ?>
       <form class="form-panel" action="post_detail.php?id=<?= e((string) $postId) ?>" method="post" style="margin-top: 10px;">
+        <?= csrf_field() ?>
         <div class="field">
           <label for="comment-body">Add a comment</label>
           <textarea id="comment-body" name="comment_body" placeholder="Share a tip or useful note..."></textarea>

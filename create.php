@@ -17,6 +17,10 @@ $values = [
 ];
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    if (!verify_csrf()) {
+        $errors[] = "Invalid form submission. Please try again.";
+    }
+
     foreach ($values as $key => $default) {
         $values[$key] = trim($_POST[$key] ?? $default);
     }
@@ -114,6 +118,7 @@ require_once __DIR__ . "/includes/header.php";
   <?php endif; ?>
 
   <form class="form-panel" action="create.php" method="post" enctype="multipart/form-data">
+    <?= csrf_field() ?>
     <label class="upload-zone" for="post-image">
       <div>
         <span data-lucide="image-plus"></span>
