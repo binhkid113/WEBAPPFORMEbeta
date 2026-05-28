@@ -1,9 +1,18 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$currentPage = $currentPage ?? "home";
+$pageTitle   = $pageTitle ?? "Otoku Circle";
+$currentUser = $currentUser ?? (function_exists("current_user") ? current_user() : null);
+?>
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Otoku Circle - User UI Prototype</title>
+    <title><?= e($pageTitle) ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&display=swap" rel="stylesheet" />
@@ -46,9 +55,15 @@
 
       <main class="phone-shell" aria-label="Otoku Circle web app">
         <header class="app-header">
-          <button class="icon-button" type="button" data-action="open-profile" aria-label="Open profile">
-            <span class="avatar small">M</span>
-          </button>
+          <?php if ($currentUser) : ?>
+            <a class="icon-button" href="profile.php" aria-label="Open profile">
+              <span class="avatar small"><?= e($currentUser["avatar"] ?? "U") ?></span>
+            </a>
+          <?php else : ?>
+            <a class="icon-button" href="profile.php" aria-label="Open profile">
+              <span class="avatar small">?</span>
+            </a>
+          <?php endif; ?>
           <div class="header-title">
             <span>Otoku Circle</span>
             <small>English deals near you</small>
@@ -57,40 +72,14 @@
             <button class="icon-button" type="button" data-action="toggle-theme" aria-label="Toggle theme">
               <span data-lucide="sun-moon"></span>
             </button>
-            <button class="icon-button notification-dot" type="button" data-screen="notifications" aria-label="Open notifications">
-              <span data-lucide="bell"></span>
-            </button>
+            <?php if ($currentUser) : ?>
+              <a class="icon-button notification-dot" href="notifications.php" aria-label="Open notifications">
+                <span data-lucide="bell"></span>
+              </a>
+            <?php else : ?>
+              <a class="auth-link" href="login.php">Log in</a>
+            <?php endif; ?>
           </div>
         </header>
 
-        <section id="screen-root" class="screen-root" aria-live="polite"></section>
-
-        <nav class="bottom-nav" aria-label="Main navigation">
-          <button class="nav-item active" type="button" data-screen="home">
-            <span data-lucide="home"></span>
-            <span>Home</span>
-          </button>
-          <button class="nav-item" type="button" data-screen="search">
-            <span data-lucide="search"></span>
-            <span>Search</span>
-          </button>
-          <button class="nav-item create-nav" type="button" data-screen="create">
-            <span data-lucide="plus"></span>
-            <span>Post</span>
-          </button>
-          <button class="nav-item" type="button" data-screen="nearby">
-            <span data-lucide="map-pin"></span>
-            <span>Nearby</span>
-          </button>
-          <button class="nav-item" type="button" data-screen="profile">
-            <span data-lucide="user"></span>
-            <span>Me</span>
-          </button>
-        </nav>
-      </main>
-    </div>
-
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-    <script src="script.js"></script>
-  </body>
-</html>
+        <section class="screen-root" aria-live="polite">

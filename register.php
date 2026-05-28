@@ -10,6 +10,10 @@ $username = "";
 $email = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    if (!verify_csrf()) {
+        $errors[] = "Invalid form submission. Please try again.";
+    }
+
     $username = trim($_POST["username"] ?? "");
     $email = trim($_POST["email"] ?? "");
     $password = $_POST["password"] ?? "";
@@ -77,6 +81,7 @@ require_once __DIR__ . "/includes/header.php";
     <?php endif; ?>
 
     <form class="form-panel auth-form" action="register.php" method="post">
+      <?= csrf_field() ?>
       <div class="field">
         <label for="username">Username</label>
         <input id="username" name="username" type="text" value="<?= e($username) ?>" placeholder="Minh" autocomplete="username" />

@@ -6,9 +6,62 @@ require_once __DIR__ . "/includes/auth.php";
 $currentPage = "profile";
 $pageTitle = "Otoku Circle - Profile";
 $user = current_user();
-$displayName = $user["username"] ?? "Minh Nguyen";
-$displayAvatar = $user["avatar"] ?? "M";
-$displayEmail = $user["email"] ?? "New in Japan • Takamatsu • English/Vietnamese";
+$displayName = $user["username"] ?? "Guest";
+$displayAvatar = $user["avatar"] ?? "?";
+$displayEmail = $user["email"] ?? "Log in to see your profile";
+
+$postCount = 0;
+$totalSaved = "¥0";
+$helpfulVotes = 0;
+$savedPosts = [];
+
+if ($user) {
+    try {
+        $stmt = db()->prepare("SELECT COUNT(*) FROM posts WHERE user_id = ?");
+        $stmt->execute([$user["id"]]);
+        $postCount = (int) $stmt->fetchColumn();
+
+        $stmt = db()->prepare("SELECT COUNT(*) FROM likes WHERE post_id IN (SELECT id FROM posts WHERE user_id = ?)");
+        $stmt->execute([$user["id"]]);
+        $helpfulVotes = (int) $stmt->fetchColumn();
+
+        $stmt = db()->prepare(
+            "SELECT posts.*, users.username, users.avatar AS user_avatar
+             FROM bookmarks
+             JOIN posts ON posts.id = bookmarks.post_id
+             JOIN users ON users.id = posts.user_id
+             WHERE bookmarks.user_id = ?
+             ORDER BY bookmarks.created_at DESC
+             LIMIT 10"
+        );
+        $stmt->execute([$user["id"]]);
+        $bookmarkedRows = $stmt->fetchAll();
+
+        $savedPosts = array_map(function ($row) {
+            return [
+                "id"          => (int) $row["id"],
+                "type"        => $row["type"] ?: "text",
+                "title"       => $row["title"],
+                "description" => $row["description"] ?? "",
+                "store"       => $row["store_name"] ?? "",
+                "distance"    => "",
+                "time"        => time_ago($row["created_at"]),
+                "expires"     => $row["expires"] ?? "Active",
+                "saving"      => $row["saving"] ?? "",
+                "image"       => $row["image_path"] ?? "",
+                "author"      => $row["username"],
+                "avatar"      => $row["user_avatar"] ?? strtoupper(substr($row["username"], 0, 1)),
+                "tags"        => $row["tag"] ? [$row["tag"]] : [],
+            ];
+        }, $bookmarkedRows);
+    } catch (Throwable $e) {
+        $savedPosts = [];
+    }
+}
+
+if (!$savedPosts) {
+    $savedPosts = array_slice($posts, 0, 3);
+}
 
 require_once __DIR__ . "/includes/header.php";
 ?>
@@ -23,9 +76,9 @@ require_once __DIR__ . "/includes/header.php";
       </div>
     </div>
     <div class="profile-stats">
-      <div><strong>24</strong><span>Posts</span></div>
-      <div><strong>¥12,840</strong><span>Total saved</span></div>
-      <div><strong>148</strong><span>Helpful votes</span></div>
+      <div><strong><?= e((string) $postCount) ?></strong><span>Posts</span></div>
+      <div><strong><?= e($totalSaved) ?></strong><span>Total saved</span></div>
+      <div><strong><?= e((string) $helpfulVotes) ?></strong><span>Helpful votes</span></div>
     </div>
     <div class="tag-row">
       <span class="tiny-pill green">Trusted helper</span>
@@ -48,7 +101,7 @@ require_once __DIR__ . "/includes/header.php";
       <small>Useful later</small>
     </div>
     <div class="post-list">
-      <?php foreach (array_slice($posts, 0, 3) as $post) : ?>
+      <?php foreach ($savedPosts as $post) : ?>
         <?php render_post_row($post); ?>
       <?php endforeach; ?>
     </div>
