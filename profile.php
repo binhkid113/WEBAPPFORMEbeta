@@ -87,6 +87,7 @@ require_once __DIR__ . "/includes/header.php";
     </div>
     <div class="button-row">
       <?php if ($user) : ?>
+        <a class="ghost-button" href="settings.php"><span data-lucide="settings"></span> Settings</a>
         <a class="ghost-button" href="logout.php"><span data-lucide="log-out"></span> Log out</a>
       <?php else : ?>
         <a class="primary-button" href="login.php"><span data-lucide="log-in"></span> Log in</a>
