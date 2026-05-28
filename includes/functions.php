@@ -71,3 +71,104 @@ function render_post_row(array $post): void
     echo '</div>';
     echo '</a>';
 }
+
+function load_db_posts(): array
+{
+    try {
+        $stmt = db()->query(
+            "SELECT posts.*, users.username, users.avatar AS user_avatar
+             FROM posts
+             JOIN users ON users.id = posts.user_id
+             ORDER BY posts.created_at DESC
+             LIMIT 20"
+        );
+        $rows = $stmt->fetchAll();
+
+        if (!$rows) {
+            return [];
+        }
+
+        return array_map(function ($row) {
+            $likesStmt = db()->prepare("SELECT COUNT(*) FROM likes WHERE post_id = ?");
+            $likesStmt->execute([$row["id"]]);
+            $likeCount = (int) $likesStmt->fetchColumn();
+
+            $commentsStmt = db()->prepare("SELECT COUNT(*) FROM comments WHERE post_id = ?");
+            $commentsStmt->execute([$row["id"]]);
+            $commentCount = (int) $commentsStmt->fetchColumn();
+
+            $avatar = $row["user_avatar"] ?? strtoupper(substr($row["username"], 0, 1));
+            $age = time_ago($row["created_at"]);
+
+            return [
+                "id"          => (int) $row["id"],
+                "type"        => $row["type"] ?: "text",
+                "title"       => $row["title"],
+                "description" => $row["description"] ?? "",
+                "store"       => $row["store_name"] ?? "",
+                "distance"    => "",
+                "time"        => $age,
+                "expires"     => $row["expires"] ?? "Active",
+                "saving"      => $row["saving"] ?? "",
+                "image"       => $row["image_path"] ?? "",
+                "author"      => $row["username"],
+                "avatar"      => $avatar,
+                "badge"       => "",
+                "likes"       => $likeCount,
+                "comments"    => $commentCount,
+                "viewers"     => 0,
+                "tags"        => $row["tag"] ? [$row["tag"]] : [],
+                "comments_list" => load_comments_for_post((int) $row["id"]),
+            ];
+        }, $rows);
+    } catch (Throwable $e) {
+        return [];
+    }
+}
+
+function load_comments_for_post(int $postId): array
+{
+    try {
+        $stmt = db()->prepare(
+            "SELECT comments.body, users.username AS name
+             FROM comments
+             JOIN users ON users.id = comments.user_id
+             WHERE comments.post_id = ?
+             ORDER BY comments.created_at ASC
+             LIMIT 20"
+        );
+        $stmt->execute([$postId]);
+        $rows = $stmt->fetchAll();
+
+        return array_map(function ($row) {
+            return ["name" => $row["name"], "copy" => $row["body"]];
+        }, $rows);
+    } catch (Throwable $e) {
+        return [];
+    }
+}
+
+function time_ago(string $datetime): string
+{
+    $now = time();
+    $then = strtotime($datetime);
+    $diff = $now - $then;
+
+    if ($diff < 60) {
+        return "Just now";
+    }
+    if ($diff < 3600) {
+        $m = (int) floor($diff / 60);
+        return $m . " min ago";
+    }
+    if ($diff < 86400) {
+        $h = (int) floor($diff / 3600);
+        return $h . " hr ago";
+    }
+    if ($diff < 172800) {
+        return "Yesterday";
+    }
+
+    $d = (int) floor($diff / 86400);
+    return $d . " days ago";
+}
