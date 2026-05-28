@@ -69,10 +69,10 @@ $currentUser = $currentUser ?? (function_exists("current_user") ? current_user()
             <small>English deals near you</small>
           </div>
           <div class="header-actions">
-            <button class="icon-button" type="button" data-action="toggle-theme" aria-label="Toggle theme">
-              <span data-lucide="sun-moon"></span>
-            </button>
             <?php if ($currentUser) : ?>
+              <a class="icon-button" href="settings.php" aria-label="Open settings">
+                <span data-lucide="settings"></span>
+              </a>
               <a class="icon-button notification-dot" href="notifications.php" aria-label="Open notifications">
                 <span data-lucide="bell"></span>
               </a>

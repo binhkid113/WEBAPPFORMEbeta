@@ -1297,6 +1297,234 @@ body.light .store-card {
   text-align: center;
 }
 
+/* ── Settings page ── */
+
+.settings-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.settings-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.settings-header h2 svg {
+  width: 22px;
+  height: 22px;
+  color: var(--muted);
+}
+
+.settings-header .ghost-button {
+  min-height: 36px;
+  padding: 0 10px;
+  font-size: 0.82rem;
+}
+
+.settings-group {
+  margin-bottom: 14px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+
+.settings-group-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.settings-group-title h3 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.settings-icon {
+  color: var(--mint);
+}
+
+.settings-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.settings-desc {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+
+.settings-row:first-of-type,
+.settings-desc + .settings-row {
+  border-top: 0;
+}
+
+.settings-row-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+}
+
+.settings-row-label svg {
+  width: 18px;
+  height: 18px;
+  color: var(--muted);
+}
+
+.settings-row.clickable {
+  cursor: pointer;
+  border-radius: var(--radius);
+  padding: 10px 6px;
+  margin: 0 -6px;
+}
+
+.settings-row.clickable:hover {
+  background: var(--surface-3);
+}
+
+.settings-chevron svg {
+  width: 16px;
+  height: 16px;
+  color: var(--muted);
+}
+
+.settings-value {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.alert.success {
+  border-color: rgba(100, 212, 137, 0.42);
+  background: rgba(100, 212, 137, 0.1);
+  color: var(--mint-2);
+}
+
+body.light .alert.success {
+  color: #1e6b3c;
+}
+
+/* Toggle switch */
+
+.toggle-checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-track {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--surface-3);
+  border: 1px solid var(--line);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: var(--muted);
+  transition: transform 0.2s, background 0.2s;
+}
+
+.toggle-checkbox:checked + .toggle-track {
+  background: var(--mint);
+  border-color: var(--mint);
+}
+
+.toggle-checkbox:checked + .toggle-track .toggle-thumb {
+  transform: translateX(18px);
+  background: #102015;
+}
+
+.toggle-theme-btn {
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+body.light .toggle-theme-btn .toggle-track {
+  background: var(--mint);
+  border-color: var(--mint);
+}
+
+body.light .toggle-theme-btn .toggle-thumb {
+  transform: translateX(18px);
+  background: #102015;
+}
+
+.settings-group .field {
+  margin-top: 0;
+}
+
+/* ── Nearby range bar ── */
+
+.nearby-range-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.nearby-range-icon svg {
+  width: 16px;
+  height: 16px;
+  color: var(--mint);
+}
+
+.nearby-range-select {
+  margin-left: auto;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-3);
+  color: var(--text);
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.nearby-range-select:focus {
+  border-color: rgba(100, 212, 137, 0.66);
+  box-shadow: 0 0 0 3px rgba(100, 212, 137, 0.12);
+  outline: none;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
